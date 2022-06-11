@@ -10,7 +10,7 @@ import Select from 'react-select';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import userImg from '../../assets/user.png';
 
@@ -52,7 +52,6 @@ interface AddProductFormData {
 
 const EditProduct: React.FC = () => {
   const { addToast } = useToast();
-  const history = useHistory();
   const [measures] = useState([
     { label: 'Unidade', value: 'UN' },
     { label: 'Tonelada', value: 'T' },
