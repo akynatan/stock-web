@@ -8,8 +8,8 @@ const api = axios.create({
     }
 
     if (status === 401 && window.location.pathname !== '/') {
-      localStorage.removeItem('@FBAControll:token');
-      localStorage.removeItem('@FBAControll:user');
+      localStorage.removeItem('@Stock:token');
+      localStorage.removeItem('@Stock:user');
 
       window.location.href = '';
     }

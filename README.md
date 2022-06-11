@@ -1,1 +1,1 @@
-# gobarber-web
+# stock-web
