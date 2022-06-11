@@ -21,7 +21,6 @@ import userImg from '../../assets/user.png';
 import api from '../../services/api';
 
 import { useToast } from '../../hooks/toast';
-import { useAuth } from '../../hooks/auth';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -72,8 +71,6 @@ const AddSupplier: React.FC = () => {
   const history = useHistory();
   const [cities, setCities] = useState<City[]>([]);
   const [city, setCity] = useState<City | null>(null);
-
-  const { user, updateUser } = useAuth();
 
   const formRef = useRef<FormHandles>(null);
 

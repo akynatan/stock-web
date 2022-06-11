@@ -12,7 +12,6 @@ import userImg from '../../assets/user.png';
 import api from '../../services/api';
 
 import { useToast } from '../../hooks/toast';
-import { useAuth } from '../../hooks/auth';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -79,8 +78,6 @@ const AddProduct: React.FC = () => {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [brand, setBrand] = useState<Brand | null>(null);
   const [newBrand, setNewBrand] = useState(false);
-
-  const { user, updateUser } = useAuth();
 
   const formRef = useRef<FormHandles>(null);
 

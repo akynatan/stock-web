@@ -99,7 +99,6 @@ const EditProduct: React.FC = () => {
   useEffect(() => {
     api.get(`/products/${id}`).then(responseProduct => {
       setProduct(responseProduct.data);
-      console.log(responseProduct.data);
       api.get(`/model`).then(response => {
         const ModelsData = response.data.map((modelCurrent: Model) => ({
           ...modelCurrent,
@@ -160,7 +159,7 @@ const EditProduct: React.FC = () => {
         measures.find(m => m.value === responseProduct.data.measure_unit),
       );
     });
-  }, [id]);
+  }, [id, measures]);
 
   const handleSubmit = useCallback(
     async (data: AddProductFormData) => {
@@ -192,8 +191,6 @@ const EditProduct: React.FC = () => {
           new_category,
           new_manufacturer,
         } = data;
-
-        console.log(measureUnit?.value);
 
         const formData = {
           code,
@@ -235,7 +232,7 @@ const EditProduct: React.FC = () => {
         });
       }
     },
-    [brand, model, category, manufacturer, measureUnit, id, history, addToast],
+    [brand, model, category, manufacturer, measureUnit, id, addToast],
   );
 
   const handleImageChange = useCallback(

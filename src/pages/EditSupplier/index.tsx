@@ -27,7 +27,6 @@ import userImg from '../../assets/user.png';
 import api from '../../services/api';
 
 import { useToast } from '../../hooks/toast';
-import { useAuth } from '../../hooks/auth';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -81,7 +80,6 @@ const EditSupplier: React.FC = () => {
   const [city, setCity] = useState<City | null>(null);
   const [supplier, setSupplier] = useState<Supplier | null>(null);
 
-  const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
 
   const formRef = useRef<FormHandles>(null);
@@ -89,7 +87,6 @@ const EditSupplier: React.FC = () => {
   useEffect(() => {
     api.get(`/suppliers/${id}`).then(response => {
       setSupplier(response.data);
-      console.log(response.data);
 
       api.get(`/city`).then(responseCity => {
         const CitiesData = responseCity.data.map((cityCurrent: City) => ({
