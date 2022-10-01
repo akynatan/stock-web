@@ -1,24 +1,13 @@
-/* eslint-disable no-alert */
 /* eslint-disable no-useless-escape */
 import React, { useCallback, useRef, useEffect, useState } from 'react';
-import {
-  FiMail,
-  FiUser,
-  FiCamera,
-  FiGlobe,
-  FiMapPin,
-  FiPhoneCall,
-} from 'react-icons/fi';
+import { FiMail, FiUser, FiMapPin, FiPhoneCall, FiBook } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
-
-import getDataByCep from 'cep-promise';
+import getDataByCep2 from 'cep-promise';
 import $ from 'jquery';
 import 'jquery-mask-plugin/dist/jquery.mask.min';
-
-import userImg from '../../assets/user.png';
 
 import api from '../../services/api';
 
@@ -26,40 +15,28 @@ import { useToast } from '../../hooks/toast';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
-import Select from '../../components/Select';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
-import GoBack from '../../components/GoBack';
+import Select from '../Select';
+import Input from '../Input';
+import Button from '../Button';
 
-import {
-  Container,
-  Content,
-  Avatar,
-  AvatarInput,
-  FormGroup,
-  FormGroupBlock,
-} from './styles';
-import MenuHeader from '../../components/MenuHeader';
+import { FormGroup, FormGroupBlock } from './styles';
+
 import { Option, City } from '../../types';
 
 interface ICityOption extends City, Option {}
 
-interface AddSupplierFormData {
-  name_social_reason: string;
-  name_fantasy: string;
-  cnpj: string;
+interface AddClientFormData {
+  name: string;
+  document: string;
   tel: string;
   tel2: string;
-  domain: string;
+  city_id: string;
   neighborhood: string;
   street: string;
   cep: string;
   number: string;
   complement: string;
-  representative_name: string;
   mail: string;
-  mail2: string;
-  logo: string;
   note: string;
 }
 
@@ -72,11 +49,20 @@ interface CEPPromiseResponse {
   street: string;
 }
 
-const AddSupplier: React.FC = () => {
+interface FormClientProps {
+  initialData?: any;
+  method: 'edit' | 'add';
+  url: string;
+}
+
+const FormClient: React.FC<FormClientProps> = ({
+  initialData,
+  method,
+  url,
+}) => {
   const { addToast } = useToast();
   const history = useHistory();
   const [cities, setCities] = useState<ICityOption[]>([]);
-  const [city, setCity] = useState<City | null>(null);
 
   const formRef = useRef<FormHandles>(null);
 
@@ -161,24 +147,24 @@ const AddSupplier: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    api.get(`/city`).then(response => {
-      const CitiesData = response.data.map((cityCurrent: City) => ({
+    api.get(`/city`).then(responseCity => {
+      const CitiesData = responseCity.data.map((cityCurrent: City) => ({
         ...cityCurrent,
         value: cityCurrent.id,
         label: cityCurrent.name,
       }));
+
       setCities(CitiesData);
     });
   }, []);
 
   const handleSubmit = useCallback(
-    async (data: AddSupplierFormData) => {
+    async (data: AddClientFormData) => {
       formRef.current?.setErrors({});
       try {
         const schema = Yup.object().shape({
-          name_social_reason: Yup.string().required('Razão Social obrigatório'),
-          name_fantasy: Yup.string().required('Nome Fantasia obrigatório'),
-          cnpj: Yup.string()
+          name: Yup.string().required('Nome obrigatório'),
+          document: Yup.string()
             .matches(
               /(^\d{3}\.\d{3}\.\d{3}\-\d{2}$)|(^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$)/,
               'Escreva o CNPJ/CPF com os pontos e virgulas',
@@ -190,7 +176,7 @@ const AddSupplier: React.FC = () => {
             )
             .min(14, 'Mínimo 14 caracteres')
             .max(18, 'Máximo 18 caracteres')
-            .required('CPF/CNPJ obrigatório'),
+            .required('Documento obrigatório'),
           tel: Yup.string().test(
             'len',
             'Tamanho inválido',
@@ -203,7 +189,6 @@ const AddSupplier: React.FC = () => {
             val =>
               val?.length === 14 || val?.length === 15 || val?.length === 0,
           ),
-          domain: Yup.string(),
           neighborhood: Yup.string(),
           street: Yup.string(),
           cep: Yup.string().test(
@@ -213,9 +198,7 @@ const AddSupplier: React.FC = () => {
           ),
           number: Yup.string(),
           complement: Yup.string(),
-          representative_name: Yup.string(),
           mail: Yup.string().email(),
-          mail2: Yup.string().email(),
           note: Yup.string(),
         });
 
@@ -224,53 +207,51 @@ const AddSupplier: React.FC = () => {
         });
 
         const {
-          name_social_reason,
-          name_fantasy,
-          cnpj,
+          name,
+          document,
           tel,
           tel2,
-          domain,
           neighborhood,
           street,
+          city_id,
           cep,
           number,
           complement,
-          representative_name,
           mail,
-          mail2,
           note,
         } = data;
 
         const formData = {
-          name_social_reason,
-          name_fantasy,
-          cnpj,
+          name,
+          document,
           tel,
           tel2,
-          domain,
-          city_id: city?.id,
           neighborhood,
           street,
+          city_id,
           cep,
           number,
           complement,
-          representative_name,
           mail,
-          mail2,
           note,
         };
 
-        const response = await api.post('/suppliers', formData);
+        const methods = {
+          edit: async () => api.put(url, formData),
+          add: async () => api.post(url, formData),
+        };
+
+        const response = await methods[method]();
 
         if (response.data) {
           addToast({
             type: 'success',
-            title: 'Fornecedor Cadastrado!',
-            description: 'Novo fornecedor cadastrado com sucesso!',
+            title: 'Cliente Cadastrado!',
+            description: 'Novo cliente cadastrado com sucesso!',
           });
         }
 
-        history.push('/suppliers');
+        history.push('/clients');
       } catch (err: any) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -285,30 +266,28 @@ const AddSupplier: React.FC = () => {
         });
       }
     },
-    [addToast, history, city],
+    [addToast, url, method, history],
   );
-
-  const handleLogoChange = useCallback(() => {
-    window.alert('Cadastre o fornecedor para poder adicionar uma logo');
-  }, []);
 
   const getAdressByCEP = useCallback(
     (cepData: string) => {
       if (cepData && cepData !== '') {
-        getDataByCep(cepData)
+        getDataByCep2(cepData)
           .then((res: CEPPromiseResponse) => {
             const { city: city_name, street, neighborhood } = res;
 
-            const cityFind = cities.find(c => c.name === city_name);
-            setCity(cityFind || null);
+            const cityFind: any = cities.find(c => c.name === city_name);
 
             formRef.current?.setData({
               street,
               neighborhood,
+              city_id: cityFind,
+              number: '',
+              complement: '',
             });
           })
-          .catch(() => {
-            setCity(null);
+          .catch((err: any) => {
+            console.log(err);
           });
       }
     },
@@ -316,105 +295,54 @@ const AddSupplier: React.FC = () => {
   );
 
   return (
-    <Container>
-      <MenuHeader />
+    <Form initialData={initialData} ref={formRef} onSubmit={handleSubmit}>
+      <FormGroup>
+        <FormGroupBlock>
+          <h2>Dados pessoais:</h2>
+          <Input name="name" icon={FiUser} placeholder="Nome" />
+          <Input
+            id="cpfcnpj"
+            name="document"
+            icon={FiUser}
+            placeholder="Documento"
+          />
+          <Input
+            className="celphones"
+            name="tel"
+            icon={FiPhoneCall}
+            placeholder="Telefone Principal"
+          />
+          <Input
+            className="celphones"
+            name="tel2"
+            icon={FiPhoneCall}
+            placeholder="Telefone Secundário"
+          />
+          <Input name="mail" icon={FiMail} placeholder="E-mail" />
+          <Input name="note" icon={FiBook} placeholder="Anotação" />
+        </FormGroupBlock>
+        <FormGroupBlock>
+          <h2>Endereço:</h2>
+          <Input
+            name="cep"
+            className="cep"
+            onBlurCapture={e => getAdressByCEP(e.target.value)}
+            icon={FiMapPin}
+            placeholder="CEP"
+          />
+          <Input name="street" icon={FiMapPin} placeholder="Rua" />
+          <Input name="number" icon={FiMapPin} placeholder="Número" />
+          <Input name="complement" icon={FiMapPin} placeholder="Complemento" />
+          <Input name="neighborhood" icon={FiMapPin} placeholder="Bairro" />
+          <Select name="city_id" placeholder="Cidade" options={cities} />
+        </FormGroupBlock>
+      </FormGroup>
 
-      <Content>
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <GoBack />
-          <h1>Novo Fornecedor</h1>
-          <FormGroup>
-            <FormGroupBlock>
-              <Avatar>
-                <AvatarInput>
-                  <img src={userImg} alt="Logo Fornecedor" />
-                  <label htmlFor="logo">
-                    <FiCamera />
-                    <input
-                      id="logo"
-                      type="checkbox"
-                      onClick={handleLogoChange}
-                    />
-                  </label>
-                </AvatarInput>
-              </Avatar>
-            </FormGroupBlock>
-
-            <FormGroupBlock>
-              <h2>Nome:</h2>
-              <Input name="name_social_reason" placeholder="Razão Social" />
-              <Input name="name_fantasy" placeholder="Nome Fantasia" />
-              <Input name="domain" icon={FiGlobe} placeholder="Site" />
-              <Input
-                id="cpfcnpj"
-                name="cnpj"
-                icon={FiGlobe}
-                placeholder="CNPJ"
-              />
-            </FormGroupBlock>
-          </FormGroup>
-
-          <FormGroup>
-            <FormGroupBlock>
-              <h2>Endereço:</h2>
-              <Input
-                name="cep"
-                className="cep"
-                onBlurCapture={e => getAdressByCEP(e.target.value)}
-                icon={FiMapPin}
-                placeholder="CEP"
-              />
-              <Input name="street" icon={FiMapPin} placeholder="Rua" />
-              <Input name="number" icon={FiMapPin} placeholder="Número" />
-              <Input
-                name="complement"
-                icon={FiMapPin}
-                placeholder="Complemento"
-              />
-              <Input name="neighborhood" icon={FiMapPin} placeholder="Bairro" />
-              <Select name="city_id" placeholder="Cidade" options={cities} />
-            </FormGroupBlock>
-
-            <FormGroupBlock>
-              <h2>Representante:</h2>
-              <Input
-                name="representative_name"
-                icon={FiUser}
-                placeholder="Nome Representante"
-              />
-              <Input
-                name="mail"
-                icon={FiMail}
-                placeholder="E-mail Representante"
-              />
-              <Input
-                name="mail2"
-                icon={FiMail}
-                placeholder="E-mail Secundário"
-              />
-              <Input
-                name="tel"
-                className="celphones"
-                icon={FiPhoneCall}
-                placeholder="Telefone Principal"
-              />
-              <Input
-                name="tel2"
-                className="celphones"
-                icon={FiPhoneCall}
-                placeholder="Telefone Secundário"
-              />
-              <Input name="note" placeholder="Anotação" />
-            </FormGroupBlock>
-          </FormGroup>
-
-          <div>
-            <Button type="submit">Cadastrar Fornecedor</Button>
-          </div>
-        </Form>
-      </Content>
-    </Container>
+      <div>
+        <Button type="submit">Atualizar Cliente</Button>
+      </div>
+    </Form>
   );
 };
 
-export default AddSupplier;
+export default FormClient;

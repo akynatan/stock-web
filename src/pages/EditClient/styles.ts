@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { shade } from 'polished';
 
 export const Container = styled.div`
   .css-reyg8m-control:hover,
@@ -13,45 +12,27 @@ export const Container = styled.div`
   }
 `;
 
-export const Content = styled.main`
+export const ContentPage = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
   place-content: center;
-
   width: 100%;
+`;
 
-  form {
-    margin: 80px 0;
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  place-content: center;
+  margin: 80px 0;
+  text-align: center;
+
+  h1 {
+    margin-bottom: 24px;
+    font-size: 36px;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-
-    h1 {
-      margin-bottom: 24px;
-      font-size: 36px;
-      text-align: center;
-      color: #ff9000;
-    }
-
-    h2 {
-      margin-top: 24px;
-      margin-bottom: 5px;
-      font-size: 20px;
-      text-align: left;
-    }
-
-    a {
-      color: #f4ede8;
-      display: block;
-      margin-top: 24px;
-      text-decoration: none;
-      transition: color 0.2s;
-
-      &:hover {
-        color: ${shade(0.2, '#f4ede8')};
-      }
-    }
+    color: #ff9000;
   }
 `;
 

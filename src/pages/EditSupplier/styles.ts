@@ -1,6 +1,15 @@
 import styled from 'styled-components';
 import { shade } from 'polished';
 
+export const GoBack = styled.button`
+  background: transparent;
+  border: 0;
+  color: #ff9000;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+`;
+
 export const Container = styled.div`
   .css-reyg8m-control:hover,
   .css-e7sjo6-control:hover {

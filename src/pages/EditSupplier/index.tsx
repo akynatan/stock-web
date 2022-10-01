@@ -15,12 +15,13 @@ import {
   FiPhoneCall,
 } from 'react-icons/fi';
 
-import Select from 'react-select';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { useHistory, useParams } from 'react-router-dom';
 import getDataByCep from 'cep-promise';
+import $ from 'jquery';
+import 'jquery-mask-plugin/dist/jquery.mask.min';
 
 import userImg from '../../assets/user.png';
 
@@ -30,8 +31,10 @@ import { useToast } from '../../hooks/toast';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
+import Select from '../../components/Select';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import GoBack from '../../components/GoBack';
 
 import {
   Container,
@@ -42,8 +45,9 @@ import {
   FormGroupBlock,
 } from './styles';
 import MenuHeader from '../../components/MenuHeader';
-import { City } from '../../types/City';
-import { Supplier } from '../../types/Supplier';
+import { Option, City, Supplier } from '../../types';
+
+interface ICityOption extends City, Option {}
 
 interface ProfileEditSupplier {
   name_social_reason: string;
@@ -76,13 +80,93 @@ interface CEPPromiseResponse {
 const EditSupplier: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
-  const [cities, setCities] = useState<City[]>([]);
+  const [cities, setCities] = useState<ICityOption[]>([]);
   const [city, setCity] = useState<City | null>(null);
   const [supplier, setSupplier] = useState<Supplier | null>(null);
 
   const { id } = useParams<{ id: string }>();
 
   const formRef = useRef<FormHandles>(null);
+
+  useEffect(() => {
+    const CPFMaskBehavior = (val: string): string => {
+      return val.replace(/\D/g, '').length < 12
+        ? '000.000.000-009999'
+        : '00.000.000/0000-00';
+    };
+
+    $('#cpfcnpj').keyup(function (this) {
+      const element = $('#cpfcnpj');
+
+      try {
+        element.unmask();
+      } catch (e) {
+        console.log(e);
+      }
+
+      element.mask(CPFMaskBehavior(String(element?.val()) || ''));
+
+      const that: any = this;
+      setTimeout(() => {
+        that.selectionStart = 10000;
+        that.selectionEnd = 10000;
+      }, 0);
+
+      const currentValue = element.val() || '';
+      element.val('');
+      element.val(currentValue);
+    });
+
+    const SPMaskBehavior = (val: string): string => {
+      return val.replace(/\D/g, '').length === 11
+        ? '(00) 00000-0000'
+        : '(00) 0000-00009';
+    };
+
+    $('.celphones').keyup(function (this) {
+      const element: any = $(this);
+
+      try {
+        element.unmask();
+      } catch (e) {
+        console.log(e);
+      }
+
+      element.mask(SPMaskBehavior(element?.val() || ''));
+
+      const that: any = this;
+      setTimeout(() => {
+        that.selectionStart = 10000;
+        that.selectionEnd = 10000;
+      }, 0);
+
+      const currentValue = element.val() || '';
+      element.val('');
+      element.val(currentValue);
+    });
+
+    $('.cep').keyup(function (this) {
+      const element = $('.cep');
+
+      try {
+        element.unmask();
+      } catch (e) {
+        console.log(e);
+      }
+
+      element.mask('00000-000');
+
+      const that: any = this;
+      setTimeout(() => {
+        that.selectionStart = 10000;
+        that.selectionEnd = 10000;
+      }, 0);
+
+      const currentValue = element.val() || '';
+      element.val('');
+      element.val(currentValue);
+    });
+  }, []);
 
   useEffect(() => {
     api.get(`/suppliers/${id}`).then(response => {
@@ -120,16 +204,27 @@ const EditSupplier: React.FC = () => {
             )
             .min(14, 'Mínimo 14 caracteres')
             .max(18, 'Máximo 18 caracteres')
-            .required('CNPJ obrigatório'),
-          tel: Yup.string(),
-          tel2: Yup.string(),
+            .required('CPF/CNPJ obrigatório'),
+          tel: Yup.string().test(
+            'len',
+            'Tamanho inválido',
+            val =>
+              val?.length === 14 || val?.length === 15 || val?.length === 0,
+          ),
+          tel2: Yup.string().test(
+            'len',
+            'Tamanho inválido',
+            val =>
+              val?.length === 14 || val?.length === 15 || val?.length === 0,
+          ),
           domain: Yup.string(),
           neighborhood: Yup.string(),
           street: Yup.string(),
-          cep: Yup.number()
-            .typeError('Somente números (sem traços e pontos)')
-            .test('len', 'Tamanho inválido', val => String(val)?.length === 8)
-            .required('CEP obrigatório'),
+          cep: Yup.string().test(
+            'len',
+            'Tamanho inválido',
+            val => val?.length === 9 || val?.length === 0,
+          ),
           number: Yup.string(),
           complement: Yup.string(),
           representative_name: Yup.string(),
@@ -276,6 +371,7 @@ const EditSupplier: React.FC = () => {
           ref={formRef}
           onSubmit={handleSubmit}
         >
+          <GoBack />
           <h1>Novo Fornecedor</h1>
           <FormGroup>
             <FormGroupBlock>
@@ -302,7 +398,12 @@ const EditSupplier: React.FC = () => {
               <Input name="name_social_reason" placeholder="Razão Social" />
               <Input name="name_fantasy" placeholder="Nome Fantasia" />
               <Input name="domain" icon={FiGlobe} placeholder="Site" />
-              <Input name="cnpj" icon={FiGlobe} placeholder="CNPJ" />
+              <Input
+                id="cpfcnpj"
+                name="cnpj"
+                icon={FiGlobe}
+                placeholder="CNPJ"
+              />
             </FormGroupBlock>
           </FormGroup>
 
@@ -311,6 +412,7 @@ const EditSupplier: React.FC = () => {
               <h2>Endereço:</h2>
               <Input
                 name="cep"
+                className="cep"
                 onBlurCapture={e => getAdressByCEP(e.target.value)}
                 icon={FiMapPin}
                 placeholder="CEP"
@@ -323,75 +425,7 @@ const EditSupplier: React.FC = () => {
                 placeholder="Complemento"
               />
               <Input name="neighborhood" icon={FiMapPin} placeholder="Bairro" />
-              <Select
-                name="city_id"
-                value={city}
-                isSearchable
-                styles={{
-                  option: (provided, state) => {
-                    return {
-                      ...provided,
-                      backgroundColor: '#232129',
-                      borderBottom: '1px dotted #fff',
-                      color: state.isSelected ? '#ff9000' : '#fff',
-                      cursor: 'pointer',
-                      height: '40px',
-                      textAlign: 'left',
-                    };
-                  },
-                  menu: provided => {
-                    return {
-                      ...provided,
-                      border: 0,
-                    };
-                  },
-                  container: (provided, state) => {
-                    return {
-                      ...provided,
-                      border: state.isFocused
-                        ? '1px solid #ff9000'
-                        : '1px solid #232129',
-                      borderRadius: '10px',
-                      width: '100%',
-                    };
-                  },
-                  control: (provided, state) => {
-                    return {
-                      ...provided,
-                      backgroundColor: '#232129',
-                      color: '#666360',
-                      width: '100%',
-                      height: '55px',
-                      borderColor: '#232129',
-                      borderRadius: '10px',
-                      textAlign: 'left',
-                      boxShadow: 'none',
-                      border: state.isFocused
-                        ? '1px solid #ff9000'
-                        : '1px solid #232129',
-                    };
-                  },
-                  singleValue: (provided, state) => {
-                    const opacity = state.isDisabled ? 0.5 : 1;
-                    const transition = 'opacity 300ms';
-
-                    return {
-                      ...provided,
-                      opacity,
-                      transition,
-                      color: '#fff',
-                    };
-                  },
-                }}
-                placeholder="Cidade"
-                options={cities}
-                isMulti={false}
-                onChange={s => {
-                  if (s) {
-                    setCity(s);
-                  }
-                }}
-              />
+              <Select name="city_id" placeholder="Cidade" options={cities} />
             </FormGroupBlock>
 
             <FormGroupBlock>
@@ -413,11 +447,13 @@ const EditSupplier: React.FC = () => {
               />
               <Input
                 name="tel"
+                className="celphones"
                 icon={FiPhoneCall}
                 placeholder="Telefone Principal"
               />
               <Input
                 name="tel2"
+                className="celphones"
                 icon={FiPhoneCall}
                 placeholder="Telefone Secundário"
               />

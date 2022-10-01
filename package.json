@@ -18,6 +18,8 @@
     "axios": "^0.21.0",
     "cep-promise": "^4.1.2",
     "date-fns": "^2.16.1",
+    "jquery": "^3.6.1",
+    "jquery-mask-plugin": "^1.14.16",
     "polished": "^4.0.5",
     "react": "^17.0.1",
     "react-day-picker": "^7.4.8",
@@ -63,6 +65,8 @@
   },
   "devDependencies": {
     "@testing-library/react-hooks": "^5.0.3",
+    "@types/jquery": "^3.5.14",
+    "@types/jquery-mask-plugin": "^1.14.4",
     "@types/react-icons": "^3.0.0",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-select": "^5.0.1",
