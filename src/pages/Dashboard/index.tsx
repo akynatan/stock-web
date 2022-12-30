@@ -17,11 +17,17 @@ const Dashboard: React.FC = () => {
           <Link to="/products">
             <MenuItem>Produtos</MenuItem>
           </Link>
-          <Link to="/products">
-            <MenuItem>Transações</MenuItem>
-          </Link>
           <Link to="/clients">
             <MenuItem>Clientes</MenuItem>
+          </Link>
+          <Link to="/products">
+            <MenuItem>Compras</MenuItem>
+          </Link>
+          <Link to="/products">
+            <MenuItem>Pedidos</MenuItem>
+          </Link>
+          <Link to="/products">
+            <MenuItem>Transações</MenuItem>
           </Link>
         </Menu>
       </Content>

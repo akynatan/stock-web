@@ -4,7 +4,7 @@ import React from 'react';
 import FormClient from '../../components/FormClient';
 import GoBack from '../../components/GoBack';
 
-import { Container, Content } from './styles';
+import { Container, Content, ContentPage } from './styles';
 import MenuHeader from '../../components/MenuHeader';
 
 const AddClient: React.FC = () => {
@@ -12,13 +12,15 @@ const AddClient: React.FC = () => {
     <Container>
       <MenuHeader />
 
-      <Content>
-        <GoBack />
+      <ContentPage>
+        <Content>
+          <GoBack />
 
-        <h1>Novo Cliente</h1>
+          <h1>Novo Cliente</h1>
 
-        <FormClient url="/client" method="add" />
-      </Content>
+          <FormClient url="/client" method="add" />
+        </Content>
+      </ContentPage>
     </Container>
   );
 };

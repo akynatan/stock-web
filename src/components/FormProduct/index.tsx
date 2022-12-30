@@ -1,9 +1,12 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable consistent-return */
 /* eslint-disable no-alert */
 import React, {
   useCallback,
   useRef,
   useEffect,
   useState,
+  ChangeEvent,
   useMemo,
 } from 'react';
 import { FiCamera } from 'react-icons/fi';
@@ -26,7 +29,14 @@ import Button from '../Button';
 
 import { Avatar, AvatarInput, FormGroup, FormGroupBlock } from './styles';
 
-import { Model, Category, Manufacturer, Brand, Option } from '../../types';
+import {
+  Model,
+  Category,
+  Manufacturer,
+  Brand,
+  Option,
+  Product,
+} from '../../types';
 
 interface IModelOption extends Model, Option {}
 interface ICategoryOption extends Category, Option {}
@@ -57,6 +67,8 @@ const FormProduct: React.FC<FormProductProps> = ({
 }) => {
   const { addToast } = useToast();
   const history = useHistory();
+
+  const [product, setProduct] = useState<Product | null>(null);
 
   const measures = useMemo(
     () => [
@@ -202,9 +214,32 @@ const FormProduct: React.FC<FormProductProps> = ({
     [history, method, url, addToast],
   );
 
-  const handleImageChange = useCallback(() => {
-    window.alert('Cadastre o produto para poder adicionar uma imagem');
-  }, []);
+  const handleImageChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (method === 'add') {
+        return window.alert(
+          'Cadastre o produto para poder adicionar uma imagem',
+        );
+      }
+
+      const data = new FormData();
+
+      const { files } = e.target;
+      if (files) {
+        data.append('image', files[0]);
+
+        api.patch(`/products/${initialData?.id}/image`, data).then(response => {
+          setProduct(response.data);
+
+          addToast({
+            type: 'success',
+            title: 'Imagem atualizada!',
+          });
+        });
+      }
+    },
+    [addToast, initialData?.id, method],
+  );
 
   return (
     <Form ref={formRef} onSubmit={handleSubmit} initialData={initialData}>
@@ -212,14 +247,19 @@ const FormProduct: React.FC<FormProductProps> = ({
         <FormGroupBlock style={{ flex: 1, marginBottom: 20 }}>
           <Avatar>
             <AvatarInput>
-              <img src={userImg} alt="Imagem Fornecedor" />
+              <img
+                src={
+                  initialData?.image_url
+                    ? initialData.image_url
+                    : product?.image_url
+                    ? product?.image_url
+                    : userImg
+                }
+                alt="Imagem Fornecedor"
+              />
               <label htmlFor="avatar">
                 <FiCamera />
-                <input
-                  id="avatar"
-                  type="checkbox"
-                  onChange={handleImageChange}
-                />
+                <input id="avatar" type="file" onChange={handleImageChange} />
               </label>
             </AvatarInput>
           </Avatar>
