@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:4444',
+  baseURL: process.env.REACT_APP_API_URL || '/api',
   timeout: 60_000,
   validateStatus: (status: number) => {
     if (status >= 200 && status < 300) {
