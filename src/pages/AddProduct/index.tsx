@@ -15,7 +15,7 @@ const AddProduct: React.FC = () => {
         <Content>
           <GoBack />
           <h1>Novo Produto</h1>
-          <FormProduct url="/product" method="add" />
+          <FormProduct url="/products" method="add" />
         </Content>
       </ContentPage>
     </Container>

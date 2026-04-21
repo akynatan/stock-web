@@ -37,9 +37,9 @@ describe('Auth Hook', () => {
   it('should restore saved data from storage when  auth inits', async () => {
     jest.spyOn(Storage.prototype, 'getItem').mockImplementation(key => {
       switch (key) {
-        case '@GoBarber:token':
+        case '@Stock:token':
           return 'token-false';
-        case '@GoBarber:user':
+        case '@Stock:user':
           return JSON.stringify({
             id: 'id-false',
             name: 'name-false',
@@ -60,9 +60,9 @@ describe('Auth Hook', () => {
   it('should be able to signout', async () => {
     jest.spyOn(Storage.prototype, 'getItem').mockImplementation(key => {
       switch (key) {
-        case '@GoBarber:token':
+        case '@Stock:token':
           return 'token-false';
-        case '@GoBarber:user':
+        case '@Stock:user':
           return JSON.stringify({
             id: 'id-false',
             name: 'name-false',
@@ -106,7 +106,7 @@ describe('Auth Hook', () => {
     });
 
     expect(setItemSpy).toHaveBeenCalledWith(
-      '@GoBarber:user',
+      '@Stock:user',
       JSON.stringify(user),
     );
     expect(result.current.user).toEqual(user);

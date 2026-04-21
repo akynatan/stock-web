@@ -3,6 +3,7 @@ import { City } from './City';
 export interface Client {
   id: string;
   name: string;
+  code?: string;
   document: string;
   tel: string;
   tel2: string;
@@ -18,4 +19,5 @@ export interface Client {
   created_at: Date;
   updated_at: Date;
   image_url?: string;
+  active?: boolean;
 }

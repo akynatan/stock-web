@@ -113,6 +113,7 @@ const Suppliers: React.FC = () => {
           <thead>
             <tr className="table100-head">
               <th>Nome Fantasia</th>
+              <th>Código</th>
               <th>CNPJ</th>
               <th>Endereço</th>
               <th>Site</th>
@@ -140,6 +141,7 @@ const Suppliers: React.FC = () => {
                       {supplier.name_fantasy || '-'}
                     </Link>
                   </td>
+                  <td className="column2">{supplier.code || '-'}</td>
                   <td className="column2">{supplier.cnpj || '-'}</td>
                   <td className="column3">
                     {`${supplier.street}, ${supplier.number} - ${supplier.neighborhood}, ${supplier.city.name}/${supplier.city.state.abbreviation}`}

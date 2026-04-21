@@ -43,8 +43,13 @@ interface ICategoryOption extends Category, Option {}
 interface IManufacturerOption extends Manufacturer, Option {}
 interface IBrandOption extends Brand, Option {}
 
+interface QuickAddModal {
+  label: string;
+  endpoint: string;
+  onCreated: (item: { id: string; name: string }) => void;
+}
+
 interface FormProductFormData {
-  code: string;
   name: string;
   description: string;
   brand_id: string;
@@ -94,7 +99,44 @@ const FormProduct: React.FC<FormProductProps> = ({
   const [manufactures, setManufacturers] = useState<IManufacturerOption[]>([]);
   const [brands, setBrands] = useState<IBrandOption[]>([]);
 
+  const [quickAddModal, setQuickAddModal] = useState<QuickAddModal | null>(
+    null,
+  );
+  const [quickAddValue, setQuickAddValue] = useState('');
+
   const formRef = useRef<FormHandles>(null);
+
+  const handleQuickAdd = useCallback(async () => {
+    if (!quickAddModal || !quickAddValue.trim()) return;
+
+    try {
+      const response = await api.post(quickAddModal.endpoint, {
+        name: quickAddValue,
+      });
+      quickAddModal.onCreated(response.data);
+      addToast({ type: 'success', title: `${quickAddModal.label} criado!` });
+      setQuickAddModal(null);
+      setQuickAddValue('');
+    } catch (err: any) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao criar',
+        description: err.response?.data?.error,
+      });
+    }
+  }, [quickAddModal, quickAddValue, addToast]);
+
+  const openQuickAdd = useCallback(
+    (
+      label: string,
+      endpoint: string,
+      onCreated: (item: { id: string; name: string }) => void,
+    ) => {
+      setQuickAddValue('');
+      setQuickAddModal({ label, endpoint, onCreated });
+    },
+    [],
+  );
 
   useEffect(() => {
     api.get(`/model`).then(response => {
@@ -143,10 +185,6 @@ const FormProduct: React.FC<FormProductProps> = ({
       try {
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
-          code: Yup.string()
-            .min(5, 'Mínimo 5 caracteres')
-            .max(5, 'Maximo 5 caracteres')
-            .required('Code obrigatório'),
           description: Yup.string().required('Descrição obrigatória'),
           measure_unit: Yup.string().required('Unidade obrigatória'),
           brand_id: Yup.string().required('Campo obrigatório'),
@@ -160,7 +198,6 @@ const FormProduct: React.FC<FormProductProps> = ({
         });
 
         const {
-          code,
           name,
           description,
           measure_unit,
@@ -171,7 +208,6 @@ const FormProduct: React.FC<FormProductProps> = ({
         } = data;
 
         const formData = {
-          code,
           name,
           description,
           brand_id,
@@ -267,7 +303,6 @@ const FormProduct: React.FC<FormProductProps> = ({
       </FormGroup>
       <FormGroup>
         <FormGroupBlock>
-          <Input name="code" placeholder="Código" />
           <Input name="name" placeholder="Nome" />
           <Input name="description" placeholder="Descrição" />
           <Select
@@ -278,36 +313,216 @@ const FormProduct: React.FC<FormProductProps> = ({
         </FormGroupBlock>
 
         <FormGroupBlock>
-          <Select
-            name="brand_id"
-            placeholder="Marca"
-            options={brands}
-            component="creatable"
-          />
-          <Select
-            name="model_id"
-            placeholder="Modelo"
-            options={models}
-            component="creatable"
-          />
-          <Select
-            name="category_id"
-            placeholder="Categoria"
-            options={categories}
-            component="creatable"
-          />
-          <Select
-            name="manufacturer_id"
-            placeholder="Fabricante"
-            options={manufactures}
-            component="creatable"
-          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Select
+              name="brand_id"
+              placeholder="Marca"
+              options={brands}
+              component="creatable"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                openQuickAdd('Marca', '/brand', item => {
+                  console.log;
+                  setBrands(prev => [
+                    ...prev,
+                    { ...item, value: item.id, label: item.name } as any,
+                  ]);
+                });
+              }}
+              style={{
+                background: '#ff9000',
+                border: 0,
+                borderRadius: '50%',
+                width: 36,
+                height: 36,
+                color: '#312e38',
+                fontSize: 22,
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                flexShrink: 0,
+              }}
+            >
+              +
+            </button>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Select
+              name="model_id"
+              placeholder="Modelo"
+              options={models}
+              component="creatable"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                openQuickAdd('Modelo', '/model', item => {
+                  setModels(prev => [
+                    ...prev,
+                    { ...item, value: item.id, label: item.name } as any,
+                  ]);
+                });
+              }}
+              style={{
+                background: '#ff9000',
+                border: 0,
+                borderRadius: '50%',
+                width: 36,
+                height: 36,
+                color: '#312e38',
+                fontSize: 22,
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                flexShrink: 0,
+              }}
+            >
+              +
+            </button>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Select
+              name="category_id"
+              placeholder="Categoria"
+              options={categories}
+              component="creatable"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                openQuickAdd('Categoria', '/category', item => {
+                  setCategories(prev => [
+                    ...prev,
+                    { ...item, value: item.id, label: item.name } as any,
+                  ]);
+                });
+              }}
+              style={{
+                background: '#ff9000',
+                border: 0,
+                borderRadius: '50%',
+                width: 36,
+                height: 36,
+                color: '#312e38',
+                fontSize: 22,
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                flexShrink: 0,
+              }}
+            >
+              +
+            </button>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Select
+              name="manufacturer_id"
+              placeholder="Fabricante"
+              options={manufactures}
+              component="creatable"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                openQuickAdd('Fabricante', '/manufacturer', item => {
+                  setManufacturers(prev => [
+                    ...prev,
+                    { ...item, value: item.id, label: item.name } as any,
+                  ]);
+                });
+              }}
+              style={{
+                background: '#ff9000',
+                border: 0,
+                borderRadius: '50%',
+                width: 36,
+                height: 36,
+                color: '#312e38',
+                fontSize: 22,
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                flexShrink: 0,
+              }}
+            >
+              +
+            </button>
+          </div>
         </FormGroupBlock>
       </FormGroup>
 
       <div>
         <Button type="submit">Cadastrar Produto</Button>
       </div>
+
+      {quickAddModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'rgba(0,0,0,0.6)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+          onClick={() => setQuickAddModal(null)}
+          role="presentation"
+        >
+          <div
+            style={{
+              background: '#312e38',
+              borderRadius: 10,
+              padding: 40,
+              width: 400,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+            onClick={e => e.stopPropagation()}
+            role="presentation"
+          >
+            <h2 style={{ color: '#ff9000', marginBottom: 24 }}>
+              Novo(a) {quickAddModal.label}
+            </h2>
+            <input
+              placeholder="Nome"
+              value={quickAddValue}
+              onChange={e => setQuickAddValue(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleQuickAdd()}
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
+              style={{
+                background: '#232129',
+                borderRadius: 10,
+                border: '2px solid #232129',
+                padding: 16,
+                width: '100%',
+                color: '#f4ede8',
+                fontSize: 16,
+                marginBottom: 16,
+              }}
+            />
+            <div style={{ display: 'flex', gap: 12, width: '100%' }}>
+              <Button
+                type="button"
+                onClick={() => setQuickAddModal(null)}
+                style={{ flex: 1 }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                onClick={handleQuickAdd}
+                style={{ flex: 1 }}
+              >
+                Salvar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Form>
   );
 };

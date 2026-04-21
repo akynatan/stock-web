@@ -20,14 +20,21 @@ const Dashboard: React.FC = () => {
           <Link to="/clients">
             <MenuItem>Clientes</MenuItem>
           </Link>
-          <Link to="/products">
-            <MenuItem>Compras</MenuItem>
-          </Link>
-          <Link to="/products">
-            <MenuItem>Pedidos</MenuItem>
-          </Link>
-          <Link to="/products">
+
+          <Link to="/stock-movements">
             <MenuItem>Transações</MenuItem>
+          </Link>
+          <Link to="/brands">
+            <MenuItem>Marcas</MenuItem>
+          </Link>
+          <Link to="/models">
+            <MenuItem>Modelos</MenuItem>
+          </Link>
+          <Link to="/categories">
+            <MenuItem>Categorias</MenuItem>
+          </Link>
+          <Link to="/manufacturers">
+            <MenuItem>Fabricantes</MenuItem>
           </Link>
         </Menu>
       </Content>

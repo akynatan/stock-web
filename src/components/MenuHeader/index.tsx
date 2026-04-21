@@ -11,7 +11,7 @@ import { Header, HeaderContent, Profile } from './styles';
 
 const MenuHeader: React.FC = () => {
   const { signOut, user } = useAuth();
-  const { name, avatar_url } = user;
+  // const { name, avatar_url } = user;
 
   return (
     <Header>
@@ -21,12 +21,9 @@ const MenuHeader: React.FC = () => {
         </Link>
 
         <Profile>
-          <img src={avatar_url || userImg} alt={name} />
           <div>
             <span>Bem vindo</span>
-            <Link to="/profile">
-              <strong>{name}</strong>
-            </Link>
+            <Link to="/profile">Aky Natan</Link>
           </div>
         </Profile>
 

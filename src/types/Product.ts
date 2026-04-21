@@ -19,6 +19,8 @@ export interface Product {
   image?: string;
   image_url?: string;
   measure_unit: string;
+  current_stock?: number;
+  active?: boolean;
   created_at: Date;
   updated_at: Date;
 }

@@ -5,6 +5,7 @@ export interface Supplier {
   name_social_reason: string;
   name_fantasy: string;
   cnpj: string;
+  code?: string;
   tel: string;
   tel2: string;
   domain: string;

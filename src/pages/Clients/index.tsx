@@ -1,6 +1,7 @@
 /* eslint-disable no-alert */
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Switch from 'react-switch';
 import { HiPencil } from 'react-icons/hi';
 import { MdDelete } from 'react-icons/md';
 
@@ -59,6 +60,25 @@ const Clients: React.FC = () => {
     [addToast],
   );
 
+  const handleStatus = useCallback(
+    async (clientId: string) => {
+      try {
+        await api.patch(`/client/${clientId}/status`);
+        setClients(oldClients =>
+          oldClients.map(c =>
+            c.id === clientId ? { ...c, active: !c.active } : c,
+          ),
+        );
+      } catch (err) {
+        addToast({
+          title: 'Falha ao alterar status do cliente.',
+          type: 'error',
+        });
+      }
+    },
+    [addToast],
+  );
+
   return (
     <Container>
       <MenuHeader />
@@ -79,11 +99,13 @@ const Clients: React.FC = () => {
           <thead>
             <tr className="table100-head">
               <th>Nome</th>
+              <th>Código</th>
               <th>Documento</th>
               <th>Telefone</th>
               <th>Email</th>
               <th>Endereço</th>
               <th>Notas</th>
+              <th>Ativo?</th>
               <th> </th>
             </tr>
           </thead>
@@ -104,6 +126,7 @@ const Clients: React.FC = () => {
                       {client.name || '-'}
                     </Link>
                   </td>
+                  <td className="column2">{client.code || '-'}</td>
                   <td className="column2">{client.document || '-'}</td>
                   <td className="column3">{client.tel || '-'}</td>
                   <td className="column4">{client.mail || '-'}</td>
@@ -111,6 +134,21 @@ const Clients: React.FC = () => {
                     {`${client.street}, ${client.number} - ${client.neighborhood}, ${client.city.name}/${client.city.state.abbreviation}`}
                   </td>
                   <td className="column6">{client.note || '-'}</td>
+                  <td>
+                    <Switch
+                      checked={!!client.active}
+                      width={30}
+                      height={15}
+                      offColor="#d2a3a3"
+                      onHandleColor="#d6d6d6"
+                      offHandleColor="#d6d6d6"
+                      activeBoxShadow="0"
+                      handleDiameter={17}
+                      checkedIcon={false}
+                      uncheckedIcon={false}
+                      onChange={() => handleStatus(client.id)}
+                    />
+                  </td>
                   <td>
                     <Link
                       style={{

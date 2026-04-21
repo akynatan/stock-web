@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 import { MdDelete } from 'react-icons/md';
+import Switch from 'react-switch';
 
 import 'react-day-picker/lib/style.css';
 
@@ -72,6 +73,25 @@ const Products: React.FC = () => {
     [addToast],
   );
 
+  const handleStatus = useCallback(
+    async (productId: string) => {
+      try {
+        await api.patch(`/products/${productId}/status`);
+        setProducts(oldProducts =>
+          oldProducts.map(p =>
+            p.id === productId ? { ...p, active: !p.active } : p,
+          ),
+        );
+      } catch (err) {
+        addToast({
+          title: 'Falha ao alterar status do produto.',
+          type: 'error',
+        });
+      }
+    },
+    [addToast],
+  );
+
   return (
     <Container>
       <MenuHeader />
@@ -99,6 +119,8 @@ const Products: React.FC = () => {
               <th>Categoria</th>
               <th>Fabricante</th>
               <th>Unidade de Medida</th>
+              <th>Estoque Atual</th>
+              <th>Ativo?</th>
               <th> </th>
             </tr>
           </thead>
@@ -133,7 +155,33 @@ const Products: React.FC = () => {
                     {measures.find(m => m.value === product?.measure_unit)
                       ?.label || '-'}
                   </td>
+                  <td className="column4"> {product.current_stock ?? 0}</td>
                   <td>
+                    <Switch
+                      checked={!!product.active}
+                      width={30}
+                      height={15}
+                      offColor="#d2a3a3"
+                      onHandleColor="#d6d6d6"
+                      offHandleColor="#d6d6d6"
+                      activeBoxShadow="0"
+                      handleDiameter={17}
+                      checkedIcon={false}
+                      uncheckedIcon={false}
+                      onChange={() => handleStatus(product.id)}
+                    />
+                  </td>
+                  <td>
+                    <Link
+                      style={{
+                        textDecoration: 'none',
+                        fontWeight: 600,
+                        color: '#ff9000',
+                      }}
+                      to={`product/${product.id}/stock-movements`}
+                    >
+                      Movimentar
+                    </Link>
                     <Link
                       style={{
                         textDecoration: 'none',

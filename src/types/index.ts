@@ -7,4 +7,5 @@ export * from './Model';
 export * from './Option';
 export * from './Product';
 export * from './State';
+export * from './StockMovement';
 export * from './Supplier';
