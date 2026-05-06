@@ -52,6 +52,7 @@ export const Content = styled.main`
   table thead tr {
     height: 60px;
     background: #28262e;
+    color: #f4ede8;
   }
   table tbody tr {
     height: 50px;
@@ -61,24 +62,24 @@ export const Content = styled.main`
   }
 
   tbody tr:nth-child(even) {
-    background-color: #f5f5f5;
+    background-color: #312e38;
   }
 
   tbody tr:nth-child(odd) {
-    background-color: white;
+    background-color: #3e3b47;
   }
 
   tbody tr {
     font-family: OpenSans-Regular;
     font-size: 15px;
-    color: #808080;
+    color: #f4ede8;
     line-height: 1.2;
     font-weight: unset;
   }
 
   tbody tr:hover {
-    color: #555555;
-    background-color: #f5f5f5;
+    color: #ffffff;
+    background-color: #454050;
     cursor: pointer;
   }
 
