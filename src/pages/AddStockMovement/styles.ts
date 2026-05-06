@@ -24,4 +24,11 @@ export const Content = styled.div`
     text-align: center;
     color: #ff9000;
   }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
 `;
