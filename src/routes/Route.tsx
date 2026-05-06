@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 
 import { useAuth } from '../hooks/auth';
+import Layout from '../components/Layout';
 
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
@@ -23,18 +24,28 @@ const Route: React.FC<RouteProps> = ({
     <ReactDOMRoute
       {...rest}
       render={({ location }) => {
-        return isPrivate === !!user ? (
-          <Component />
-        ) : (
-          <Redirect
-            to={{
-              pathname: isPrivate ? '/signin' : '/',
-              state: {
-                from: location,
-              },
-            }}
-          />
-        );
+        if (isPrivate !== !!user) {
+          return (
+            <Redirect
+              to={{
+                pathname: isPrivate ? '/signin' : '/',
+                state: {
+                  from: location,
+                },
+              }}
+            />
+          );
+        }
+
+        if (isPrivate) {
+          return (
+            <Layout>
+              <Component />
+            </Layout>
+          );
+        }
+
+        return <Component />;
       }}
     />
   );
