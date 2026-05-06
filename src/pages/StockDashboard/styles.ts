@@ -46,8 +46,9 @@ export const Content = styled.main`
   }
   table td,
   table th {
-    padding-left: 8px;
+    padding: 0 8px;
     text-align: center;
+    vertical-align: middle;
   }
   table thead tr {
     height: 60px;

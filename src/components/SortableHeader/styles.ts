@@ -15,6 +15,7 @@ export const HeaderCell = styled.th`
 export const HeaderContent = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
 `;
 
