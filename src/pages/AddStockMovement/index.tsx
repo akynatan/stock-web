@@ -93,7 +93,7 @@ const AddStockMovement: React.FC = () => {
           type: Yup.string().required('Tipo obrigatório'),
           quantity: Yup.number()
             .typeError('Quantidade deve ser um número')
-            .positive('Quantidade deve ser maior que zero')
+            .notOneOf([0], 'Quantidade não pode ser zero')
             .required('Quantidade obrigatória'),
           reason: Yup.string().required('Motivo obrigatório'),
           supplier_id: Yup.string().when('type', {
@@ -198,6 +198,7 @@ const AddStockMovement: React.FC = () => {
               </option>
               <option value="entrada">Entrada</option>
               <option value="saida">Saída</option>
+              <option value="ajuste">Ajuste de Estoque</option>
             </select>
 
             <Input name="quantity" placeholder="Quantidade" type="number" />
