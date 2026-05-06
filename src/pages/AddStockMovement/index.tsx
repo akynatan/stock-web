@@ -182,7 +182,7 @@ const AddStockMovement: React.FC = () => {
               value={movementType}
               onChange={e => setMovementType(e.target.value)}
               style={{
-                width: '300px',
+                width: '100%',
                 height: '55px',
                 backgroundColor: '#232129',
                 color: movementType ? '#fff' : '#666360',
@@ -190,7 +190,6 @@ const AddStockMovement: React.FC = () => {
                 borderRadius: '10px',
                 padding: '0 16px',
                 fontSize: '16px',
-                marginBottom: '8px',
               }}
             >
               <option value="" disabled>
