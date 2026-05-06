@@ -1,7 +1,6 @@
 /* eslint-disable no-alert */
 import React, { useCallback, useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
-import { MdDelete } from 'react-icons/md';
 import Switch from 'react-switch';
 
 import 'react-day-picker/lib/style.css';
@@ -193,7 +192,6 @@ const Products: React.FC = () => {
                     >
                       <HiPencil />
                     </Link>
-                    <MdDelete onClick={() => handleDeleteProduct(product)} />
                   </td>
                 </tr>
               );

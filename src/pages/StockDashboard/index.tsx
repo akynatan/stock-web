@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
-import MenuHeader from '../../components/MenuHeader';
 import PeriodFilter from '../../components/PeriodFilter';
 import SortableHeader from '../../components/SortableHeader';
 import api from '../../services/api';
@@ -144,8 +143,6 @@ const StockDashboard: React.FC = () => {
 
     return (
         <Container>
-            <MenuHeader />
-
             <Content>
                 <HeaderPage>
                     <div>

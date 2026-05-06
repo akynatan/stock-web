@@ -1,7 +1,6 @@
 /* eslint-disable no-alert */
 import React, { useCallback, useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
-import { MdDelete } from 'react-icons/md';
 
 import MenuHeader from '../MenuHeader';
 import Button from '../Button';
@@ -83,28 +82,6 @@ const CrudPage: React.FC<CrudPageProps> = ({ title, endpoint }) => {
     }
   }, [inputValue, editingItem, endpoint, addToast, loadItems]);
 
-  const handleDelete = useCallback(
-    (item: Entity) => {
-      const confirm = window.confirm(`Deseja apagar "${item.name}"?`);
-      if (!confirm) return;
-
-      api
-        .delete(`${endpoint}/${item.id}`)
-        .then(() => {
-          setItems(val => val.filter(i => i.id !== item.id));
-          addToast({ type: 'success', title: 'Apagado com sucesso!' });
-        })
-        .catch((err: any) => {
-          addToast({
-            type: 'error',
-            title: 'Erro ao apagar',
-            description: err.response?.data?.error,
-          });
-        });
-    },
-    [endpoint, addToast],
-  );
-
   return (
     <Container>
       <MenuHeader />
@@ -133,7 +110,6 @@ const CrudPage: React.FC<CrudPageProps> = ({ title, endpoint }) => {
                 <td>{item.name}</td>
                 <td>
                   <HiPencil onClick={() => handleOpenEdit(item)} />
-                  <MdDelete onClick={() => handleDelete(item)} />
                 </td>
               </tr>
             ))}
