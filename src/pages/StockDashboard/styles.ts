@@ -153,7 +153,7 @@ export const HeaderPage = styled.main`
 `;
 
 export const SectionTitle = styled.h2`
-  color: #3e3b47;
+  color: #ff9000;
   margin-top: 40px;
   margin-bottom: 16px;
   font-size: 20px;
