@@ -5,13 +5,10 @@ import FormClient from '../../components/FormClient';
 import GoBack from '../../components/GoBack';
 
 import { Container, Content, ContentPage } from './styles';
-import MenuHeader from '../../components/MenuHeader';
 
 const AddClient: React.FC = () => {
   return (
     <Container>
-      <MenuHeader />
-
       <ContentPage>
         <Content>
           <GoBack />

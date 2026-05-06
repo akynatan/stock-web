@@ -6,7 +6,6 @@ import api from '../../services/api';
 
 import FormClient from '../../components/FormClient';
 import GoBack from '../../components/GoBack';
-import MenuHeader from '../../components/MenuHeader';
 
 import { Client } from '../../types';
 
@@ -25,8 +24,6 @@ const EditClient: React.FC = () => {
 
   return (
     <Container>
-      <MenuHeader />
-
       <ContentPage>
         <Content>
           <GoBack />

@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 
-import MenuHeader from '../MenuHeader';
 import Button from '../Button';
 import api from '../../services/api';
 import { useToast } from '../../hooks/toast';
@@ -84,8 +83,6 @@ const CrudPage: React.FC<CrudPageProps> = ({ title, endpoint }) => {
 
   return (
     <Container>
-      <MenuHeader />
-
       <Content>
         <HeaderPage>
           <div>

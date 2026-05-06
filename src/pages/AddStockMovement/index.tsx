@@ -8,7 +8,6 @@ import api from '../../services/api';
 import { useToast } from '../../hooks/toast';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-import MenuHeader from '../../components/MenuHeader';
 import GoBack from '../../components/GoBack';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -160,8 +159,6 @@ const AddStockMovement: React.FC = () => {
 
   return (
     <Container>
-      <MenuHeader />
-
       <ContentPage>
         <Content>
           <GoBack />

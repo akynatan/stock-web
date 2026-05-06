@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FiPlusCircle } from 'react-icons/fi';
 
-import MenuHeader from '../../components/MenuHeader';
 import GoBack from '../../components/GoBack';
 import Button from '../../components/Button';
 import api from '../../services/api';
@@ -33,8 +32,6 @@ const StockMovements: React.FC = () => {
 
   return (
     <Container>
-      <MenuHeader />
-
       <Content>
         <HeaderPage>
           <div>

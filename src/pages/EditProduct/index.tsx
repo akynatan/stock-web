@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import api from '../../services/api';
 
 import GoBack from '../../components/GoBack';
-import MenuHeader from '../../components/MenuHeader';
 import FormProduct from '../../components/FormProduct';
 
 import { Product } from '../../types';
@@ -23,7 +22,6 @@ const EditProduct: React.FC = () => {
 
   return (
     <Container>
-      <MenuHeader />
       <ContentPage>
         <Content>
           <GoBack />

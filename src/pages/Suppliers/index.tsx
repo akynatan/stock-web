@@ -10,7 +10,6 @@ import 'react-day-picker/lib/style.css';
 
 import { Supplier } from '../../types/Supplier';
 
-import MenuHeader from '../../components/MenuHeader';
 import Button from '../../components/Button';
 import api from '../../services/api';
 
@@ -95,8 +94,6 @@ const Suppliers: React.FC = () => {
 
   return (
     <Container>
-      <MenuHeader />
-
       <Content>
         <HeaderPage>
           <div>

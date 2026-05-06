@@ -7,7 +7,6 @@ import 'react-day-picker/lib/style.css';
 
 import { Link } from 'react-router-dom';
 import { FiPlusCircle } from 'react-icons/fi';
-import MenuHeader from '../../components/MenuHeader';
 import { Container, Content, HeaderPage } from './styles';
 import Button from '../../components/Button';
 import api from '../../services/api';
@@ -93,8 +92,6 @@ const Products: React.FC = () => {
 
   return (
     <Container>
-      <MenuHeader />
-
       <Content>
         <HeaderPage>
           <div>
