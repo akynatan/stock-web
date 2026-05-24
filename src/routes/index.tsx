@@ -28,6 +28,7 @@ import Clients from '../pages/Clients';
 import AddClient from '../pages/AddClient';
 import EditClient from '../pages/EditClient';
 import StockDashboard from '../pages/StockDashboard';
+import Users from '../pages/Users';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -75,6 +76,7 @@ const Routes: React.FC = () => (
     <Route path="/client/:id" component={EditClient} isPrivate />
     <Route path="/clients" component={Clients} isPrivate />
     <Route path="/stock-dashboard" component={StockDashboard} isPrivate />
+    <Route path="/users" component={Users} isPrivate />
   </Switch>
 );
 

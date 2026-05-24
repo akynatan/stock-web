@@ -36,6 +36,9 @@ const Dashboard: React.FC = () => {
           <Link to="/stock-dashboard">
             <MenuItem>Dashboard de Estoque</MenuItem>
           </Link>
+          <Link to="/users">
+            <MenuItem>Usuários</MenuItem>
+          </Link>
         </Menu>
       </Content>
     </Container>

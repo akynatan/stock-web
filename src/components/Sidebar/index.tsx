@@ -12,6 +12,7 @@ import {
     FiGrid,
     FiTool,
     FiBarChart2,
+    FiUserPlus,
 } from 'react-icons/fi';
 
 import logoImg from '../../assets/logo.svg';
@@ -30,6 +31,7 @@ const menuItems = [
     { path: '/categories', label: 'Categorias', icon: FiGrid },
     { path: '/manufacturers', label: 'Fabricantes', icon: FiTool },
     { path: '/stock-dashboard', label: 'Dashboard', icon: FiBarChart2 },
+    { path: '/users', label: 'Usuários', icon: FiUserPlus },
 ];
 
 const Sidebar: React.FC = () => {

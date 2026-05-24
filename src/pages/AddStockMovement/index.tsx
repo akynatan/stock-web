@@ -116,7 +116,7 @@ const AddStockMovement: React.FC = () => {
           product_id: productId,
           type: movementType,
           quantity: Number(quantity),
-          reason,
+          reason: movementType === 'ajuste' ? `Ajuste de Estoque - ${reason}` : reason,
         };
 
         if (movementType === 'entrada' && supplier_id) {
