@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Switch from 'react-switch';
 import { HiPencil } from 'react-icons/hi';
-import { MdDelete } from 'react-icons/md';
 import { FiPlusCircle } from 'react-icons/fi';
 
 import 'react-day-picker/lib/style.css';
@@ -31,33 +30,6 @@ const Suppliers: React.FC = () => {
         setIsFetching(false);
       });
   }, []);
-
-  const handleDeleteSupplier = useCallback(
-    (supplier: Supplier) => {
-      const confirm = window.confirm(
-        `Deseja mesmo apagar o fornecedor ${supplier.name_fantasy}?`,
-      );
-
-      confirm &&
-        api
-          .delete(`/suppliers/${supplier.id}`)
-          .then(() => {
-            setSuppliers(val => val.filter(s => s.id !== supplier.id));
-
-            addToast({
-              type: 'success',
-              title: 'Fornecedor apagado!',
-            });
-          })
-          .catch(() => {
-            addToast({
-              type: 'error',
-              title: 'Falha ao apagar fornecedor!',
-            });
-          });
-    },
-    [addToast],
-  );
 
   const handleStatus = useCallback(
     async supplier_id => {
@@ -178,10 +150,6 @@ const Suppliers: React.FC = () => {
                     >
                       <HiPencil />
                     </Link>
-                    <MdDelete
-                      title="Apagar Fornecedor"
-                      onClick={() => handleDeleteSupplier(supplier)}
-                    />
                   </td>
                 </tr>
               );

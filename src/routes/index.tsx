@@ -76,7 +76,7 @@ const Routes: React.FC = () => (
     <Route path="/client/:id" component={EditClient} isPrivate />
     <Route path="/clients" component={Clients} isPrivate />
     <Route path="/stock-dashboard" component={StockDashboard} isPrivate />
-    <Route path="/users" component={Users} isPrivate />
+    <Route path="/users" component={Users} isPrivate requiredRole="admin" />
   </Switch>
 );
 

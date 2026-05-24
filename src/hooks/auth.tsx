@@ -6,6 +6,7 @@ interface User {
   name: string;
   email: string;
   avatar_url: string;
+  role?: 'user' | 'admin';
 }
 
 interface SignInCredentials {

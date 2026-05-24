@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { useAuth } from '../../hooks/auth';
 import { Container, Content, Menu, MenuItem } from './styles';
 
 const Dashboard: React.FC = () => {
+  const { user } = useAuth();
+
   return (
     <Container>
       <Content>
@@ -36,9 +39,11 @@ const Dashboard: React.FC = () => {
           <Link to="/stock-dashboard">
             <MenuItem>Dashboard de Estoque</MenuItem>
           </Link>
-          <Link to="/users">
-            <MenuItem>Usuários</MenuItem>
-          </Link>
+          {user?.role === 'admin' && (
+            <Link to="/users">
+              <MenuItem>Usuários</MenuItem>
+            </Link>
+          )}
         </Menu>
       </Content>
     </Container>

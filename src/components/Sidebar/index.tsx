@@ -20,7 +20,7 @@ import { useAuth } from '../../hooks/auth';
 
 import { Container, Logo, NavList, NavItem, UserSection } from './styles';
 
-const menuItems = [
+const baseMenuItems = [
     { path: '/', label: 'Início', icon: FiHome, exact: true },
     { path: '/suppliers', label: 'Fornecedores', icon: FiTruck },
     { path: '/products', label: 'Produtos', icon: FiBox },
@@ -31,12 +31,20 @@ const menuItems = [
     { path: '/categories', label: 'Categorias', icon: FiGrid },
     { path: '/manufacturers', label: 'Fabricantes', icon: FiTool },
     { path: '/stock-dashboard', label: 'Dashboard', icon: FiBarChart2 },
+];
+
+const adminOnlyMenuItems = [
     { path: '/users', label: 'Usuários', icon: FiUserPlus },
 ];
 
 const Sidebar: React.FC = () => {
-    const { signOut } = useAuth();
+    const { user, signOut } = useAuth();
     const location = useLocation();
+
+    const menuItems =
+        user?.role === 'admin'
+            ? [...baseMenuItems, ...adminOnlyMenuItems]
+            : baseMenuItems;
 
     const isActive = (path: string, exact?: boolean) => {
         if (exact) return location.pathname === path;

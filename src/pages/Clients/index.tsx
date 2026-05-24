@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Switch from 'react-switch';
 import { HiPencil } from 'react-icons/hi';
-import { MdDelete } from 'react-icons/md';
 
 import 'react-day-picker/lib/style.css';
 
@@ -31,33 +30,6 @@ const Clients: React.FC = () => {
         setIsFetching(false);
       });
   }, []);
-
-  const handleDeleteClient = useCallback(
-    (client: Client) => {
-      const confirm = window.confirm(
-        `Deseja mesmo apagar o cliente ${client.name}?`,
-      );
-
-      confirm &&
-        api
-          .delete(`/client/${client.id}`)
-          .then(() => {
-            setClients(val => val.filter(s => s.id !== client.id));
-
-            addToast({
-              type: 'success',
-              title: 'Cliente apagado!',
-            });
-          })
-          .catch(() => {
-            addToast({
-              type: 'error',
-              title: 'Falha ao apagar cliente!',
-            });
-          });
-    },
-    [addToast],
-  );
 
   const handleStatus = useCallback(
     async (clientId: string) => {
@@ -128,7 +100,9 @@ const Clients: React.FC = () => {
                   <td className="column3">{client.tel || '-'}</td>
                   <td className="column4">{client.mail || '-'}</td>
                   <td className="column5">
-                    {`${client.street}, ${client.number} - ${client.neighborhood}, ${client.city.name}/${client.city.state.abbreviation}`}
+                    {client.city
+                      ? `${client.street}, ${client.number} - ${client.neighborhood}, ${client.city.name}/${client.city.state.abbreviation}`
+                      : '-'}
                   </td>
                   <td className="column6">{client.note || '-'}</td>
                   <td>
@@ -158,10 +132,6 @@ const Clients: React.FC = () => {
                     >
                       <HiPencil />
                     </Link>
-                    <MdDelete
-                      title="Apagar Cliente"
-                      onClick={() => handleDeleteClient(client)}
-                    />
                   </td>
                 </tr>
               );

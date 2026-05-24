@@ -23,7 +23,7 @@ import InputCEP from '../InputCEP';
 import InputTelephone from '../InputTelephone';
 import InputCPF from '../InputCPF';
 
-interface ICityOption extends City, Option {}
+interface ICityOption extends City, Option { }
 
 interface AddClientFormData {
   name: string;
@@ -240,7 +240,9 @@ const FormClient: React.FC<FormClientProps> = ({
       </FormGroup>
 
       <div>
-        <Button type="submit">Atualizar Cliente</Button>
+        <Button type="submit">
+          {method === 'add' ? 'Cadastrar Cliente' : 'Atualizar Cliente'}
+        </Button>
       </div>
     </Form>
   );

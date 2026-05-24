@@ -10,11 +10,13 @@ import Layout from '../components/Layout';
 
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
+  requiredRole?: 'user' | 'admin';
   component: React.ComponentType;
 }
 
 const Route: React.FC<RouteProps> = ({
   isPrivate = false,
+  requiredRole,
   component: Component,
   ...rest
 }) => {
@@ -33,6 +35,14 @@ const Route: React.FC<RouteProps> = ({
                   from: location,
                 },
               }}
+            />
+          );
+        }
+
+        if (isPrivate && requiredRole && user?.role !== requiredRole) {
+          return (
+            <Redirect
+              to={{ pathname: '/', state: { from: location } }}
             />
           );
         }
